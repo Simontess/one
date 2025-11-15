@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            /* background image (place pexels-photo-531880.jpg next to this HTML file) */
+            background-image: url('pexels-photo-531880.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            /* fallback color while image loads */
+            background-color: #76bb28;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* optional dark overlay to improve contrast */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: rgba(187, 98, 98, 0.25);
+            pointer-events: none;
+        }
+
+        .container {
+
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow:
+                0 0 20px 4px #034ae4,
+                0 0 40px 8px #1da39c,
+                0 0 0 4px #c01d2a;
+            max-width: 350px;
+            width: 90vw;
+            margin: 1rem;
+            transition: box-shadow 0.3s;
+            position: relative;
+            z-index: 1;
+            /* keep above overlay */
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        input {
+            padding: 8px;
+            width: 100%;
+            margin-top: 5px;
+            border: 1px solid #e70000;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #19dbab91;
+            color: rgb(0, 17, 255);
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(28, 41, 38, 0.7), 0 0 20px rgba(25, 219, 171, 0.5);
+        }
+
+        .switch-form {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .error {
+            color: rgb(224, 168, 14);
+            font-size: 1rem;
+            /* Added default font size */
+            display: none;
+        }
+
+        @media (max-width: 500px) {
+            .container {
+                padding: 1rem;
+                max-width: 98vw;
+            }
+
+            h2 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="loginForm">
+            <h2>Login</h2>
+            <div class="form-group">
+                <label for="loginName">Username:</label>
+                <input type="text" id="loginName" required>
+                <span class="error" id="loginNameError">Name should not contain numbers</span>
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">Password:</label>
+                <div style="display:flex;gap:8px;align-items:center;">
+                    <input type="password" id="loginPassword" required>
+                    <label style="font-size:0.9rem;cursor:pointer;">
+                        <input type="checkbox" onchange="togglePassword('loginPassword', this)"> Show
+                    </label>
+                </div>
+                <span class="error" id="loginPasswordError">Password must be at least 5 characters</span>
+            </div>
+            <button onclick="validateLogin()">Login</button>
+            <div class="switch-form">
+                <p>Don't have an account? <a href="#" onclick="showSignupForm(); return false;">Sign up</a></p>
+            </div>
+        </div>
+
+        <div id="signupForm" style="display: none;">
+            <h2>Sign Up</h2>
+            <div class="form-group">
+                <label for="signupName">Username:</label>
+                <input type="text" id="signupName" required>
+                <span class="error" id="signupNameError">Name should not contain numbers</span>
+            </div>
+            <div class="form-group">
+                <label for="signupPassword">Password:</label>
+                <div style="display:flex;gap:8px;align-items:center;">
+                    <input type="password" id="signupPassword" required>
+                    <label style="font-size:0.9rem;cursor:pointer;">
+                        <input type="checkbox" onchange="togglePassword('signupPassword', this)"> Show
+                    </label>
+                </div>
+                <span class="error" id="signupPasswordError">Password must be at least 5 characters</span>
+            </div>
+            <button onclick="validateSignup()">Sign Up</button>
+            <div class="switch-form">
+                <p>Already have an account? <a href="#" onclick="showLoginForm(); return false;">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function loadUsers() {
+            try {
+                return JSON.parse(localStorage.getItem('users') || '{}');
+            } catch {
+                return {};
+            }
+        }
+        function saveUsers(users) {
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        function showLoginForm(prefillName) {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('signupForm').style.display = 'none';
+            if (prefillName) document.getElementById('loginName').value = prefillName;
+        }
+        function showSignupForm(prefillName) {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('signupForm').style.display = 'block';
+            if (prefillName) document.getElementById('signupName').value = prefillName;
+        }
+
+        function togglePassword(inputId, checkbox) {
+            const inp = document.getElementById(inputId);
+            inp.type = checkbox.checked ? 'text' : 'password';
+        }
+
+        function validateLogin() {
+            validateForm('login');
+        }
+        function validateSignup() {
+            validateForm('signup');
+        }
+
+        function resetErrors(formType) {
+            const nameError = document.getElementById(`${formType}NameError`);
+            const passwordError = document.getElementById(`${formType}PasswordError`);
+            nameError.style.display = 'none';
+            passwordError.style.display = 'none';
+            if (formType === 'signup') {
+                document.getElementById('signupNameError').textContent = 'Name should not contain numbers';
+                document.getElementById('signupPasswordError').textContent = 'Password must be at least 5 characters';
+            } else {
+                document.getElementById('loginNameError').textContent = 'Name should not contain numbers';
+                document.getElementById('loginPasswordError').textContent = 'Password must be at least 5 characters';
+            }
+        }
+
+        function validateForm(formType) {
+            const nameEl = document.getElementById(`${formType}Name`);
+            const passEl = document.getElementById(`${formType}Password`);
+            const name = nameEl.value.trim();
+            const password = passEl.value;
+            const nameError = document.getElementById(`${formType}NameError`);
+            const passwordError = document.getElementById(`${formType}PasswordError`);
+
+            resetErrors(formType);
+
+            if (/\d/.test(name) || name === '') {
+                nameError.textContent = 'Name should not contain numbers and cannot be empty';
+                nameError.style.display = 'block';
+                return false;
+            }
+
+            if (password.length < 5) {
+                passwordError.textContent = 'Password must be at least 5 characters';
+                passwordError.style.display = 'block';
+                return false;
+            }
+
+            const users = loadUsers();
+
+            if (formType === 'signup') {
+                if (users[name]) {
+                    nameError.textContent = 'Username already exists';
+                    nameError.style.display = 'block';
+                    return false;
+                }
+                users[name] = { password };
+                saveUsers(users);
+                alert('Sign up successful! You can now log in.');
+                showLoginForm(name);
+                return true;
+            } else {
+                if (!users[name]) {
+                    alert('No account found with that username. Redirecting to Sign Up.');
+                    showSignupForm(name);
+                    return false;
+                }
+                if (users[name].password !== password) {
+                    passwordError.textContent = 'Incorrect password';
+                    passwordError.style.display = 'block';
+                    return false;
+                }
+
+            } alert('Login successful!');
+            window.location.href = 'shop.html'; // Add this line
+            return true;
+        }
+    </script>
+</body> <a href="https://wa.me/254769474319" target="_blank" 
+     style="
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #25D366;
+        color: white;
+        border-radius: 50%;
+        padding: 15px;
+        text-align: center;
+        font-size: 24px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        text-decoration: none;
+     ">
+    💬
+  </a>
+</ht

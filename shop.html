@@ -1,0 +1,381 @@
+!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Footwear Shop — Shop.html</title>
+    <style>
+        :root{
+            --bg:#0f1724; --card:#0b1220; --muted:#99a0b3; --accent:#4f46e5;
+            --glass: rgba(226, 20, 20, 0.938);
+            --gap:18px;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        }
+        *{box-sizing:border-box}
+        body{
+            margin:0; background:linear-gradient(180deg,#071026 0%, #081123 100%); color:#e6eef8;
+            padding:28px; -webkit-font-smoothing:antialiased;
+        }
+
+        header{display:flex;gap:18px;align-items:center;justify-content:space-between;margin-bottom:22px}
+        .brand{display: flex;
+    align-items: center; /* Vertically aligns all children (logo, text, button) */
+    gap: 15px;           /* Adds space between items */
+    padding: 10px 20px;
+    background-color: #f8f9fa; /* Example background color */
+}
+
+/* Styles the actual image tag */
+.brand img {
+    max-width: 100px;  /* Control the width of the logo image */
+    height: auto;      /* Maintain the image's aspect ratio */
+    vertical-align: middle; /* Ensures image sits correctly on the line */
+}
+
+/* Hides the 'FS' text if the image is present and preferred */
+.logo-text {
+    display: none; 
+}
+
+/* Styles the main title to align nicely */
+.brand h1 {
+    font-size: 1.5rem;
+    margin: 0; /* Remove default margin from h1 */
+}
+        .logo{
+            width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#06b6d4);
+            display:grid;place-items:center;font-weight:700;color:white;font-size:18px;box-shadow:0 6px 18px rgba(79,70,229,0.18)
+        }
+        h1{font-size:18px;margin:0}
+        p.lead{margin:0;color:var(--muted);font-size:13px}
+
+        .controls{display:flex;gap:12px;align-items:center}
+        .search{
+            display:flex;align-items:center;background:var(--glass);padding:8px 12px;border-radius:10px;gap:8px;
+            border:1px solid rgba(255,255,255,0.03);
+        }
+        .search input{background:transparent;border:0;color:inherit;outline:0;width:220px}
+        .chips{display:flex;flex-wrap:wrap;gap:8px}
+        .chip{
+            background:transparent;border:1px solid rgba(255,255,255,0.05);padding:8px 10px;border-radius:999px;color:var(--muted);font-size:13px;cursor:pointer;
+        }
+        .chip.active{background:linear-gradient(90deg,var(--accent),#06b6d4);color:white;border:0;box-shadow:0 6px 18px rgba(79,70,229,0.12)}
+
+        main{margin-top:18px}
+        .grid{
+            display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:var(--gap);
+        }
+        .card{
+            background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+            border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,0.03);
+            transition:transform .18s ease,box-shadow .18s ease;cursor:pointer;
+        }
+        .card:hover{transform:translateY(-6px);box-shadow:0 10px 30px rgba(2,6,23,0.6)}
+        .thumb{height:120px;display:grid;place-items:center;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);margin-bottom:10px}
+        .thumb img{width:100%;height:100%;object-fit:cover;border-radius:10px;display:block}
+        .title{font-weight:600;margin:0;color:#eaf0ff}
+        .meta{font-size:13px;color:var(--muted);margin:6px 0 10px}
+        .row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+        .price{font-weight:700;color: #dbeafe}
+        .btn{
+            background:var(--accent);border:0;color:white;padding:8px 12px;border-radius:8px;font-weight:600;cursor:pointer;
+        }
+        .btn.mpesa-btn {
+            background: #4CAF50;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn.mpesa-btn:hover {
+            background: #45a049;
+        }
+
+        .rating{color:#ffda6a;font-size:13px}
+
+        /* modal */
+        .modal{
+            position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(2,6,23,0.6),rgba(2,6,23,0.85));
+            z-index:60;padding:28px;
+        }
+        .modal.active{display:flex}
+        .sheet{background:linear-gradient(180deg,#071022,#06111b);border-radius:12px;padding:18px;max-width:920px;width:100%;display:grid;grid-template-columns:380px 1fr;gap:18px;border:1px solid rgba(255,255,255,0.03)}
+        .sheet .thumb{height:320px;border-radius:12px}
+        .sheet .thumb img{width:100%;height:100%;object-fit:cover;border-radius:12px;display:block}
+        .specs h2{margin:0 0 8px}
+        .specs p{color:var(--muted);margin-top:0}
+        .close{background:transparent;border:0;color:var(--muted);font-size:18px;cursor:pointer}
+
+        footer{margin-top:28px;color:var(--muted);font-size:13px;text-align:center}
+
+        @media (max-width:720px){
+            header{flex-direction:column;align-items:flex-start;gap:12px}
+            .sheet{grid-template-columns:1fr; padding:12px}
+            .controls{width:100%;justify-content:space-between}
+            .search input{width:120px}
+        }
+    </style>
+</head> 
+<body>
+    <header>
+       <div class="brand">
+    <!-- Wrap the logo in a link -->
+    <a href="/" class="logo-link"> 
+        <!-- The FS div might be a fallback or alternative text, consider if you still need it -->
+        <div class="logo-text">FS</div> 
+        <img src="/images/your-logo.png" alt="Footwear Shop Logo">
+    </a>
+    
+    <div>
+        <h1>Footwear Shop</h1>
+    </div>
+    
+    <!-- logout button (kept inside .brand to align properly) -->
+    <div style="margin-left: auto;">
+        <button class="chip" onclick="logout()">Logout</button>
+    </div>
+</div>
+
+        <div class="controls">
+            <div class="search" role="search">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <input id="search" placeholder="Search shoes, e.g. 'sneaker'">
+            </div>
+            <div style="width:12px"></div>
+            <div>
+                <button class="chip" data-cat="all">All</button>
+            </div>
+        </div>
+    </header>
+
+    <div style="margin-bottom:12px" class="chips" id="chipRow"></div>
+
+    <main>
+        <div class="grid" id="catalog"></div>
+    </main>
+
+    <footer>built by cybercore enterprise </footer>
+
+    <div class="modal" id="modal" aria-hidden="true">
+        <div class="sheet" role="dialog" aria-modal="true">
+            <div class="thumb" id="modalImage"></div>
+            <div class="specs">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                    <div>
+                        <h2 id="modalTitle"></h2>
+                        <div id="modalCategory" style="color:var(--muted);margin-bottom:8px"></div>
+                    </div>
+                    <div><button class="close" id="closeModal" aria-label="Close">✕</button></div>
+                </div>
+                <p id="modalDesc"></p>
+                <div style="display:flex;gap:12px;align-items:center;margin-top:18px">
+                    <div style="font-weight:700;font-size:18px" id="modalPrice"></div>
+                    <button class="btn" id="modalAdd">Add to cart</button>
+                    <button class="btn" id="mpesaPayButton" style="background: #4CAF50;">Pay with M-Pesa</button>
+                </div>
+                <div style="margin-top:18px;color:var(--muted);font-size:13px">Materials, sizes, and shipping info are sample data for demo only.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data: Kenya-focused shoe names and suggested image filenames (prices in KES)
+        const products = [
+            {id:1, name:"Ladies Wedge Sneakers", category:"Ladies", price:2600, stars:4.2, desc:"Wedge sneaker combining comfort and style.", color:"#fb7185", image:"images/ladies-wedge-sneakers.jpg"},
+            {id:2, name:"Women's Fashion Boots", category:"Ladies", price:3000, stars:4.3, desc:"Fashion ankle boots for city wear.", color:"#7c3aed", image:"images/womens-fashion-boots.jpg"},
+            {id:3, name:"Nike Airmax (Ladies)", category:"Running", price:3500, stars:4.6, desc:"Popular cushioned running shoe.", color:"#0ea5a4", image:"images/nike-airmax-ladies.jpg"},
+            {id:4, name:"Men's Fashion Sneakers", category:"Men", price:2800, stars:4.1, desc:"Casual fashion sneaker for daily wear.", color:"#64748b", image:"images/mens-fashion-sneakers.jpg"},
+            {id:5, name:"Ladies Canvas Flats", category:"Ladies", price:750, stars:4.0, desc:"Simple canvas flats for everyday use.", color:"#f59e0b", image:"images/ladies-canvas-flats.jpg"},
+            {id:6, name:"Women's Ankara Wedges", category:"Ladies", price:2700, stars:4.2, desc:"Wedges with Ankara fabric detail.", color:"#a16207", image:"images/ankara-wedges.jpg"},
+            {id:7, name:"Ladies' Heels", category:"Ladies", price:2600, stars:4.1, desc:"Classic evening heels.", color:"#ef4444", image:"images/ladies-heels.jpg"},
+            {id:8, name:"Men's Leather Loafers", category:"Formal", price:4200, stars:4.4, desc:"Polished leather loafers for office.", color:"#0f172a", image:"images/mens-leather-loafers.jpg"},
+            {id:9, name:"Kids' School Shoes", category:"Kids", price:2200, stars:4.3, desc:"Durable school shoes with reinforced toe.", color:"#065f46", image:"images/kids-school-shoes.jpg"},
+            {id:10, name:"Women's Suede Flats", category:"Ladies", price:2000, stars:4.0, desc:"Soft suede flats for comfort.", color:"#f97316", image:"images/womens-suede-flats.jpg"},
+            {id:11, name:"Men's Running Shoes (Brands)", category:"Running", price:7000, stars:4.5, desc:"Performance running options (Nike/Adidas etc.).", color:"#06b6d4", image:"images/mens-running-brands.jpg"},
+            {id:12, name:"Converse Chuck Taylors", category:"Sneakers", price:4500, stars:4.2, desc:"Classic high-top sneaker.", color:"#111827", image:"images/converse-chuck.jpg"},
+            {id:13, name:"Vans Sneakers", category:"Sneakers", price:5000, stars:4.1, desc:"Skate-inspired casual sneakers.", color:"#0ea5a4", image:"images/vans-sneakers.jpg"},
+            {id:14, name:"Adidas Gazelle", category:"Sneakers", price:6000, stars:4.3, desc:"Retro suede sneaker.", color:"#7c3aed", image:"images/adidas-gazelle.jpg"},
+            {id:15, name:"Enda Running Shoes", category:"Running", price:8500, stars:4.6, desc:"Kenyan brand Enda — built for road running.", color:"#10b981", image:"images/enda-running.jpg"},
+            {id:16, name:"Women's Sandals", category:"Sandals", price:1500, stars:4.0, desc:"Comfort sandals for warm days.", color:"#f59e0b", image:"images/womens-sandals.jpg"},
+            {id:17, name:"Men's Sandals", category:"Sandals", price:1800, stars:4.0, desc:"Casual men's sandals.", color:"#c05621", image:"images/mens-sandals.jpg"},
+            {id:18, name:"Formal Men's Oxfords", category:"Formal", price:5500, stars:4.4, desc:"Classic dress oxfords for ceremonies.", color:"#0f172a", image:"images/mens-oxfords.jpg"},
+            {id:19, name:"Nike_Air_Force", category:"Casual", price:2000, stars:4.0, desc:"Easy slip-on mules and clogs.", color:"#0ea5a4", image:"images/mules-clogs.jpg"},
+            {id:20, name:"Nike Air Force 1", category:"Sneakers", price:11000, stars:4.7, desc:"Iconic Air Force 1.", color:"#dbeafe", image:"images/nike-air-force-1.jpg"},
+            {id:21, name:"Air Jordan 1", category:"Sneakers", price:20000, stars:4.8, desc:"Popular high-top Jordan 1.", color:"#ef4444", image:"images/air-jordan-1.jpg"},
+            {id:22, name:"Hiking Boots", category:"Hiking", price:9000, stars:4.5, desc:"Robust hiking boots for trails.", color:"#065f46", image:"images/hiking-boots.jpg"},
+            {id:23, name:"Flip-flops", category:"Flip-Flops", price:300, stars:3.8, desc:"Everyday flip-flops.", color:"#f97316", image:"images/flip-flops.jpg"},
+            {id:24, name:"Work Boots", category:"Work", price:4500, stars:4.3, desc:"Sturdy boots for heavy work.", color:"#c05621", image:"images/work-boots.jpg"}
+        ];
+
+        // Categories extracted
+        const categories = ["All","Ladies","Men","Kids","Running","Sneakers","Sandals","Flip-Flops","Formal","Hiking","Work","Casual","Sneakers","Flip-Flops"];
+
+        // Utility: create inline SVG shoe thumbnail
+        function shoeSVG(color = "#7c3aed"){
+            return `
+                <svg width="220" height="120" viewBox="0 0 260 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden>
+                    <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="${color}" stop-opacity="0.95"/><stop offset="1" stop-color="#0ea5a4" stop-opacity="0.9"/></linearGradient></defs>
+                    <rect x="0" y="0" width="260" height="140" rx="12" fill="transparent"/>
+                    <g transform="translate(10,10)">
+                        <path d="M20 78 C60 30, 170 18, 220 56 L230 68 C230 68, 180 78, 150 70 C120 62, 50 90, 20 78 Z" fill="url(#g)" opacity="0.98"/>
+                        <ellipse cx="80" cy="60" rx="6" ry="3" fill="rgba(255,255,255,0.18)"/>
+                        <rect x="28" y="46" width="60" height="10" rx="5" fill="rgba(255,255,255,0.05)"/>
+                    </g>
+                </svg>`;
+        }
+
+        // Render chips
+        const chipRow = document.getElementById('chipRow');
+        categories.forEach(cat=>{
+            const b = document.createElement('button');
+            b.className = 'chip';
+            b.innerText = cat;
+            b.dataset.cat = cat.toLowerCase();
+            if(cat === "All") b.classList.add('active');
+            chipRow.appendChild(b);
+        });
+
+        // Render catalog
+        const catalog = document.getElementById('catalog');
+        function renderList(list){
+            catalog.innerHTML = '';
+            list.forEach(p=>{
+                const el = document.createElement('article');
+                el.className = 'card';
+                el.tabIndex = 0;
+                el.dataset.cat = p.category.toLowerCase();
+                const thumbHTML = p.image ? `<img src="${p.image}" alt="${p.name}">` : shoeSVG(p.color);
+                el.innerHTML = `
+                    <div class="thumb">${thumbHTML}</div>
+                    <div style="display:flex;flex-direction:column;height:82px;justify-content:space-between">
+                        <div>
+                            <div class="title">${p.name}</div>
+                            <div class="meta">${p.category}</div>
+                        </div>
+                        <div class="row">
+                            <div>
+                                <div class="price">KES ${p.price}</div>
+                                <div class="rating">${"★".repeat(Math.round(p.stars))} <span style="color:var(--muted);font-size:12px">(${p.stars})</span></div>
+                            </div>
+                            <div>
+                                <button class="btn preview" data-id="${p.id}">Preview</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                catalog.appendChild(el);
+            });
+            attachPreview();
+        }
+
+        renderList(products);
+
+        // Search & Filter
+        const searchInput = document.getElementById('search');
+        const chips = Array.from(document.querySelectorAll('.chip'));
+        let activeCat = 'all';
+
+        chips.forEach(c=>{
+            c.addEventListener('click', ()=>{
+                chips.forEach(x=>x.classList.remove('active'));
+                c.classList.add('active');
+                activeCat = c.dataset.cat;
+                applyFilters();
+            });
+        });
+
+        searchInput.addEventListener('input', applyFilters);
+
+        function applyFilters(){
+            const q = searchInput.value.trim().toLowerCase();
+            const filtered = products.filter(p=>{
+                const matchCat = (activeCat === 'all') || (p.category.toLowerCase() === activeCat);
+                const matchQ = !q || p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q);
+                return matchCat && matchQ;
+            });
+            renderList(filtered);
+        }
+
+        // Modal preview
+        const modal = document.getElementById('modal');
+        const modalImage = document.getElementById('modalImage');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalCategory = document.getElementById('modalCategory');
+        const modalDesc = document.getElementById('modalDesc');
+        const modalPrice = document.getElementById('modalPrice');
+        const closeModal = document.getElementById('closeModal');
+        const modalAdd = document.getElementById('modalAdd');
+
+        // M-Pesa payment handling
+        const mpesaPayButton = document.getElementById('mpesaPayButton');
+        let currentProduct = null;
+
+        function handleMpesaPayment(product) {
+            const steps = `
+                To complete your M-Pesa payment:
+                1. Go to M-Pesa on your phone
+                2. Select Pay Bill
+                3. Enter no: 0111971910
+                4. Enter Amount: KES ${product.price}
+                5. Enter your M-Pesa PIN
+                6. You'll receive a confirmation SMS
+            `;
+            
+            const confirmPayment = confirm(`${steps}\n\nWould you like to proceed with payment for ${product.name}?`);
+            
+            if (confirmPayment) {
+                // In a real implementation, you'd integrate with M-Pesa API
+                alert(`Please complete the payment of KES ${product.price} to 0111971910\n\nThank you for shopping with us!`);
+                modal.classList.remove('active');
+            }
+        }
+
+        mpesaPayButton.addEventListener('click', () => {
+            if (currentProduct) {
+                handleMpesaPayment(currentProduct);
+            }
+        });
+
+        function attachPreview(){
+            document.querySelectorAll('.preview').forEach(btn=>{
+                btn.addEventListener('click', e=>{
+                    const id = Number(btn.dataset.id);
+                    const p = products.find(x=>x.id===id);
+                    if(!p) return;
+                    currentProduct = p; // Store current product
+                    modalImage.innerHTML = p.image ? `<img src="${p.image}" alt="${p.name}">` : shoeSVG(p.color);
+                    modalTitle.textContent = p.name;
+                    modalCategory.textContent = p.category + ' • ' + (p.stars || 0) + '★';
+                    modalDesc.textContent = p.desc;
+                    modalPrice.textContent = 'KES ' + p.price;
+                    modal.classList.add('active');
+                    modal.setAttribute('aria-hidden', 'false');
+                });
+            });
+        }
+
+        closeModal.addEventListener('click', ()=>{ modal.classList.remove('active'); modal.setAttribute('aria-hidden','true') });
+        modal.addEventListener('click', (e)=>{ if(e.target === modal) { modal.classList.remove('active'); modal.setAttribute('aria-hidden','true') }});
+        modalAdd.addEventListener('click', ()=>{ alert('Added to cart (demo)'); modal.classList.remove('active') });
+
+        // keyboard accessibility
+        document.addEventListener('keydown', e=>{
+            if(e.key === 'Escape') { modal.classList.remove('active'); modal.setAttribute('aria-hidden','true') }
+        });
+
+        // initial attach
+        attachPreview();
+    </script><a href="https://wa.me/254769474319" target="_blank" 
+     style="
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #25D366;
+        color: rgb(12, 103, 240);
+        border-radius: 50%;
+        padding: 15px;
+        text-align: center;
+        font-size: 24px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        text-decoration: overline;
+     ">
+</body>
+</html>
